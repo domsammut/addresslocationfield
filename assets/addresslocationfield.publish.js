@@ -8,40 +8,6 @@ var field = null,
 (function ($) {
     "use strict";
 
-    function SetLatLng(latlng) {
-
-        field = $('div.field-addresslocation');
-        lat = field.find('label.latitude input');
-        lng = field.find('label.longitude input');
-        lat.val(latlng.lat().toFixed(7));
-        lng.val(latlng.lng().toFixed(7));
-    }
-
-    function SetMarker(latlng) {
-        if ($.isEmptyObject(marker)) {
-            marker = new google.maps.Marker({
-                "clickable": false,
-                "draggable": true,
-                "position": latlng,
-                "animation": google.maps.Animation.DROP,
-                "map": map
-            });
-        } else {
-            marker.setPosition(latlng);
-            marker.setMap(map);
-        }
-
-        map.setZoom(16);
-        map.setCenter(marker.getPosition());
-        SetLatLng(latlng);
-
-        google.maps.event.addListener(marker, "dragend", function () {
-            SetLatLng(marker.getPosition());
-            map.setCenter(marker.getPosition());
-        });
-    }
-
-
     /**
      * Used to populate any empty fields.
      *
@@ -104,12 +70,14 @@ var field = null,
     function addresslocationField() {
 
         var a,
-            latlng,
-            map =  new google.maps.Map($('div.field-addresslocation div.map')[0], {
-                center: new google.maps.LatLng(0, 0),
-                zoom: 1,
-                MapTypeId: google.maps.MapTypeId.ROADMAP
-            });
+            latlng;
+
+
+        map =  new google.maps.Map($('div.field-addresslocation div.map')[0], {
+            center: new google.maps.LatLng(0, 0),
+            zoom: 1,
+            MapTypeId: google.maps.MapTypeId.ROADMAP
+        });
 
         field = $('div.field-addresslocation');
         lat = field.find('label.latitude input');
@@ -201,6 +169,39 @@ var field = null,
                 button.val(button_value).removeAttr('disabled');
                 button.parent('label').append('<i>Address not found</i>');
             });
+        });
+    }
+
+    function SetLatLng(latlng) {
+
+        field = $('div.field-addresslocation');
+        lat = field.find('label.latitude input');
+        lng = field.find('label.longitude input');
+        lat.val(latlng.lat().toFixed(7));
+        lng.val(latlng.lng().toFixed(7));
+    }
+
+    function SetMarker(latlng) {
+        if ($.isEmptyObject(marker)) {
+            marker = new google.maps.Marker({
+                "clickable": false,
+                "draggable": true,
+                "position": latlng,
+                "animation": google.maps.Animation.DROP,
+                "map": map
+            });
+        } else {
+            marker.setPosition(latlng);
+            marker.setMap(map);
+        }
+
+        map.setZoom(16);
+        map.setCenter(marker.getPosition());
+        SetLatLng(latlng);
+
+        google.maps.event.addListener(marker, "dragend", function () {
+            SetLatLng(marker.getPosition());
+            map.setCenter(marker.getPosition());
         });
     }
 
